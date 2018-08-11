@@ -1,7 +1,12 @@
 <html>
 
 <head>
-
+    <style>
+        #search-results tr:hover {
+            background-color: lightgrey;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -47,6 +52,12 @@
                             + "<td>" + result.ID + "</td>"
                             + "</tr>");
                         searchResults.append(row);
+                        row.on("click", function () {
+                            $.ajax({
+                                url: "/books/add?id=" + result.ID,
+                                method: "GET"
+                            });
+                        });
                     });
                 }
             });
