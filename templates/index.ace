@@ -2,7 +2,8 @@
 html
   head
     = css
-      #search-results tr:hover {
+      #search-results tr:hover,
+      #view-results tr:hover {
         background-color: lightgrey;
         cursor: pointer;
       }
@@ -17,6 +18,13 @@ html
         font-weight: bold;
         margin: 1em;
         padding: .3em;
+      }
+
+      .delete-btn{
+        color: white;
+        background-color: #d9534f;
+        border-color: #d43f3a;
+        border-radius: 8px;
       }
   body
     div#page-switcher
@@ -44,16 +52,29 @@ html
             th width="45%" Title
             th width="35%" Author
             th width="20%" Classification
+            th width="5%"
         tbody#view-results
           {{range .Books}}
-            tr
+            tr id="book-row-{{.PK}}"
               td {{.Title}}
               td {{.Author}}
               td {{.Classification}}
+              td
+                button.delete-btn onclick="deleteBook({{.PK}})" Delete
           {{end}}
 
     script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"
     = javascript
+      function deleteBook(pk){
+        $.ajax({
+          method: "GET",
+          url: "/books/delete?pk=" + pk,
+          success: function(){
+            $("#book-row-" + pk).remove();
+          }
+        });
+      }
+
       function showSearchPage(){
         $("#search-page").show();
         $("#view-page").hide();
@@ -88,10 +109,12 @@ html
                     if(!book) return;
                     $("#view-results").append(
                       "<tr>"
+                      + "<td id='book-row-" + book.PK + "'>"
                       + "<td>" + book.Title + "</td>"
                       + "<td>" + book.Author + "</td>"
                       + "<td>" + book.Classification + "</td>"
                       + "<td>" + book.ID + "</td>"
+                      + "<td><button class='delete-btn' onclick='deleteBook(" + book.PK + ")'>Delete</button></td>"
                       + "</tr>"
                     );
                   }
