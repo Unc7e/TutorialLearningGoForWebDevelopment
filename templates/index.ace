@@ -67,8 +67,8 @@ html
     = javascript
       function deleteBook(pk){
         $.ajax({
-          method: "GET",
-          url: "/books/delete?pk=" + pk,
+          method: "DELETE",
+          url: "/books/" + pk,
           success: function(){
             $("#book-row-" + pk).remove();
           }
@@ -82,7 +82,7 @@ html
 
       function showViewPage(){
         $("#search-page").hide();
-        $("#view-page").hide();
+        $("#view-page").show();
       }
 
       function submitSearch() {
@@ -102,8 +102,8 @@ html
               searchResults.append(row);
               row.on("click", function() {
                 $.ajax({
-                  url: "/books/add?id=" + result.ID,
-                  method: "GET",
+                  url: "/books?id=" + result.ID,
+                  method: "PUT",
                   success: function(data){
                     var book = JSON.parse(data);
                     if(!book) return;
